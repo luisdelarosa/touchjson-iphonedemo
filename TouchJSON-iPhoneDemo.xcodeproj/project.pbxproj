@@ -90,8 +90,8 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				DE21FA520F8EBDFF001A4F0B /* TouchJSON */,
 				080E96DDFE201D6D7F000001 /* Classes */,
+				DE21FA520F8EBDFF001A4F0B /* TouchJSON */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
@@ -137,7 +137,7 @@
 				DE21FA610F8EBE0C001A4F0B /* CDataScanner.h */,
 				DE21FA620F8EBE0C001A4F0B /* CDataScanner.m */,
 			);
-			name = TouchJSON;
+			path = TouchJSON;
 			sourceTree = "<group>";
 		};
 		DE21FA530F8EBE0C001A4F0B /* Extensions */ = {
