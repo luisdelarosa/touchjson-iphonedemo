@@ -11,6 +11,7 @@
 
 @interface TouchJSON_iPhoneDemoViewController (PrivateMethods)
 - (NSString *)jsonFromURLString:(NSString *)urlString;
+- (void)handleError:(NSError *)error;
 @end
 
 @implementation TouchJSON_iPhoneDemoViewController
@@ -27,6 +28,9 @@
   
   tweetsTableView.dataSource = self;
   tweetsTableView.delegate = self;
+  
+  // Don't try to autocapitalize.
+  querySearchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -67,10 +71,7 @@
 }
 
 #pragma mark UISearchBarDelegate
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-	[searchBar resignFirstResponder];
-}
-
+// This is triggered by the user pressing Enter in the Search Field or pressing the "Search" button in the keyboard.
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {  
   // The real URL
   // Note that there is a rate limit
@@ -88,7 +89,7 @@
   CJSONDeserializer *jsonDeserializer = [CJSONDeserializer deserializer];
   NSError *error;
   NSDictionary *resultsDictionary = [jsonDeserializer deserializeAsDictionary:jsonData error:&error];
-	NSLog(@"error:%@", error);
+  [self handleError:error];
   
   // Clear out the old tweets from the previous search
   [tweets removeAllObjects];
@@ -107,8 +108,10 @@
 	[searchBar resignFirstResponder];	
 }
 
-#pragma mark -
+#pragma mark WebServiceCommunication
 
+// This will issue a request to a web service API via HTTP GET to the URL specified by urlString.
+// It will return the JSON string returned from the HTTP GET.
 - (NSString *)jsonFromURLString:(NSString *)urlString {
   NSURL *url = [NSURL URLWithString:urlString];
 	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
@@ -117,17 +120,18 @@
 	NSURLResponse *response = nil;
 	NSError *error = nil;
 	NSData *result = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+  [self handleError:error];
 	NSString *resultString = [[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding];
-	
-	if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
-		NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-		NSLog(@"response code:%d", [httpResponse statusCode]);
-	}
-	
-	NSLog(@"error:%@", error);
-	NSLog(@"resultString:%@", resultString);
+  return [resultString autorelease];
+}
 
-  return resultString;
+// This shows the error to the user in an alert.
+- (void)handleError:(NSError *)error {
+	if (error != nil) {
+    UIAlertView *errorAlertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
+    [errorAlertView show];
+    [errorAlertView release];
+	}  
 }
 
 @end
