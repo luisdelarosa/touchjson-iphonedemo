@@ -75,10 +75,10 @@
   // The real URL
   // Note that there is a rate limit
 	NSString *queryString = querySearchBar.text;
-//  NSString *searchString = [NSString stringWithFormat:@"http://search.twitter.com/search.json?q=%@", queryString];
+  NSString *searchString = [NSString stringWithFormat:@"http://search.twitter.com/search.json?q=%@", queryString];
   
   // URL for testing
-  NSString *searchString = [NSString stringWithFormat:@"file:///Users/louie/Downloads/search.json", queryString];
+//  NSString *searchString = [NSString stringWithFormat:@"file:///Users/louie/Downloads/search.json", queryString];
   
   // Execute search by performing an HTTP GET to the REST web service which returns JSON
   NSString *jsonString = [self jsonFromURLString:searchString];
@@ -89,6 +89,9 @@
   NSError *error;
   NSDictionary *resultsDictionary = [jsonDeserializer deserializeAsDictionary:jsonData error:&error];
 	NSLog(@"error:%@", error);
+  
+  // Clear out the old tweets from the previous search
+  [tweets removeAllObjects];
 
   // Traverse through returned dictionary to populate tweets model
   NSArray *tweetsArray = [resultsDictionary objectForKey:@"results"];
