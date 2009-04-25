@@ -39,6 +39,7 @@
 }
 
 - (void)dealloc {
+  [tweets release];
   [super dealloc];
 }
 
@@ -120,6 +121,7 @@
 	NSURLResponse *response = nil;
 	NSError *error = nil;
 	NSData *result = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+  [request release];
   [self handleError:error];
 	NSString *resultString = [[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding];
   return [resultString autorelease];
