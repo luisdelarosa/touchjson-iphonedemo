@@ -88,7 +88,7 @@
   
   // Parse JSON results with TouchJSON.  It converts it into a dictionary.
   CJSONDeserializer *jsonDeserializer = [CJSONDeserializer deserializer];
-  NSError *error;
+  NSError *error = nil;
   NSDictionary *resultsDictionary = [jsonDeserializer deserializeAsDictionary:jsonData error:&error];
   [self handleError:error];
   
